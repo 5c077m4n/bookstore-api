@@ -36,12 +36,12 @@ router.route('/books')
 		.sort({author: 1})
 		.exec((err, books) => {
 			if(err) reject(err);
-			resolve(books);
+			else resolve(books);
 		});
     })
-    .then((books) => {
-		if(!books) resErr(res, next, 404, 'The requested books cannot be found.');
-		res.status(200).json(books);
+    .then(books => {
+		if(!books) resErr(res, 404, 'The requested books cannot be found.');
+		else res.status(200).json(books);
     })
     .catch(next);
 })
@@ -53,7 +53,7 @@ router.route('/books')
 			resolve(book);
 		});
     })
-    .then((book) => res.status(200).json(book))
+    .then(book => res.status(200).json(book))
     .catch(next);
 })
 // For development and testing only!
@@ -65,7 +65,7 @@ router.route('/books')
 			resolve(books);
 		});
     })
-    .then((books) => res.json(books))
+    .then(books => res.json(books))
     .catch(next);
 });
 

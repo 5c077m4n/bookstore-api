@@ -15,15 +15,15 @@ const accessLogStream = fs.createWriteStream(
 	{flags: 'a'}
 );
 
-app.use('/', require('./config/express'));
-
 mongoose.set('debug', (collectionName, methodName) => {
-	accessLogStream.write(`Mongoose: ${collectionName}.${methodName}()`);
-	// console.log(`Mongoose: ${collectionName}.${methodName}()`);
+	accessLogStream.write(`Mongoose: ${collectionName}.${methodName}() @ ${(new Date()).toLocaleString()}\n`);
+	console.log(`Mongoose: ${collectionName}.${methodName}() @ ${(new Date()).toLocaleString()}`);
 });
 
 app.use(logger('dev', {stream: accessLogStream}));
-// app.use(logger('dev'));
+app.use(logger('dev'));
+
+app.use('/', require('./config/express'));
 
 app.use((req, res, next) => {
 	const err = new Error('The requested page cannot be found.');
