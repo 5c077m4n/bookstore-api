@@ -9,9 +9,23 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const Limiter = require('express-rate-limit');
 const compress = require('compression');
+const cors = require('cors');
 
-const cors = require('./middleware/cors');
-
+/**
+ * @function callback expects two parameters:
+ * @param error - here null
+ * @param options - whether of not the domain appears in the whitelist
+ */
+const corsOptionsDelegate = (req, callback) => {
+	const whitelist = ['http://localhost:4200'];
+	callback(
+		null,
+		{
+			origin: (whitelist.indexOf(req.header('Origin')) !== -1),
+			optionsSuccessStatus: 200
+		}
+	);
+};
 const dbURI = 'mongodb://social:qwerty_123@ds111319.mlab.com:11319/social';
 // const dbURI = 'mongodb://0.0.0.0:27017/social';
 
@@ -36,7 +50,8 @@ router.use(compress({
 
 router.use(bodyParser.json());
 router.use(helmet());
-router.use(cors);
+router.options('*', cors(corsOptionsDelegate));
+router.use(cors(corsOptionsDelegate));
 
 router.use(new Limiter({
 	windowMs: 5 * 60 * 1000, // 5 minutes

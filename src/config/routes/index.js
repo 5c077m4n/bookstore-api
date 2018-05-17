@@ -65,7 +65,7 @@ router.route('/books')
 			resolve(books);
 		});
     })
-    .then(books => res.json(books))
+    .then(books => res.status(200).json(books))
     .catch(next);
 });
 
@@ -87,10 +87,10 @@ router.route('/books/:isbn')
 		localTemp.book
 		.remove((err, book) => {
 			if(err) reject(err);
-			resolve(book);
+			else resolve(book);
 		});
     })
-    .then(book => res.json(book))
+    .then(book => res.status(200).json(book))
     .catch(next);
 });
 

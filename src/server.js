@@ -20,8 +20,8 @@ mongoose.set('debug', (collectionName, methodName) => {
 	console.log(`Mongoose: ${collectionName}.${methodName}() @ ${(new Date()).toLocaleString()}`);
 });
 
-app.use(logger('dev', {stream: accessLogStream}));
-app.use(logger('dev'));
+app.use(logger('common', {stream: accessLogStream}));
+app.use(logger('common'));
 
 app.use('/', require('./config/express'));
 
