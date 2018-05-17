@@ -17,17 +17,25 @@ const cors = require('cors');
  * @param options - whether of not the domain appears in the whitelist
  */
 const corsOptionsDelegate = (req, callback) => {
-	const whitelist = ['http://localhost:4200'];
-	callback(
-		null,
-		{
-			origin: (whitelist.indexOf(req.header('Origin')) !== -1),
-			optionsSuccessStatus: 200
-		}
-	);
+	const whitelist = [
+		'http://localhost:4200',
+		'http://217.132.174.228',
+		'http://217.132.174.228:4200'
+	];
+	callback(null, {
+		origin: (origin, callback) => {
+			if(whitelist.indexOf(origin) !== -1) callback(null, true);
+			else callback(new Error('Not allowed by CORS'));
+		},
+		optionsSuccessStatus: 200
+	});
 };
-const dbURI = 'mongodb://social:qwerty_123@ds111319.mlab.com:11319/social';
-// const dbURI = 'mongodb://0.0.0.0:27017/social';
+
+const dbURI = 'mongodb://bookkeeper:qwerty_123@ds221339.mlab.com:21339/bookstore';
+// const dbURI = 'mongodb://0.0.0.0:27017/bookstore';
+
+router.options('*', cors(corsOptionsDelegate));
+router.use(cors(corsOptionsDelegate));
 
 mongoose.connect(dbURI)
 	.then(() => {console.log(`You have been successfully connected to the database.`)})
@@ -50,8 +58,6 @@ router.use(compress({
 
 router.use(bodyParser.json());
 router.use(helmet());
-router.options('*', cors(corsOptionsDelegate));
-router.use(cors(corsOptionsDelegate));
 
 router.use(new Limiter({
 	windowMs: 5 * 60 * 1000, // 5 minutes
