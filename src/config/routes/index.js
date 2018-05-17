@@ -18,7 +18,7 @@ router.param('isbn', (req, res, next, isbn) => {
 		});
     })
     .then((book) => {
-		if(!book) return resErr(res, next, 404, 'The requested book cannot be found.');
+		if(!book) return resErr(res, 404, 'The requested book cannot be found.');
 		localTemp.book = book;
 		next();
     })

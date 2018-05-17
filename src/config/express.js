@@ -11,11 +11,6 @@ const Limiter = require('express-rate-limit');
 const compress = require('compression');
 const cors = require('cors');
 
-/**
- * @function callback expects two parameters:
- * @param error - here null
- * @param options - whether of not the domain appears in the whitelist
- */
 const corsOptionsDelegate = (req, callback) => {
 	const whitelist = [
 		'http://localhost:4200',
@@ -34,8 +29,8 @@ const corsOptionsDelegate = (req, callback) => {
 const dbURI = 'mongodb://bookkeeper:qwerty_123@ds221339.mlab.com:21339/bookstore';
 // const dbURI = 'mongodb://0.0.0.0:27017/bookstore';
 
-router.options('*', cors(corsOptionsDelegate));
-router.use(cors(corsOptionsDelegate));
+router.options('*', cors());
+router.use(cors());
 
 mongoose.connect(dbURI)
 	.then(() => {console.log(`You have been successfully connected to the database.`)})
