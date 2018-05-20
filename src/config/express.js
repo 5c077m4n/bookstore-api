@@ -6,6 +6,7 @@ const router = require('express').Router();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const helmet = require('helmet');
 const Limiter = require('express-rate-limit');
 const compress = require('compression');
@@ -20,7 +21,7 @@ const corsOptionsDelegate = (req, callback) => {
 	callback(null, {
 		origin: (origin, callback) => {
 			if(whitelist.indexOf(origin) !== -1) callback(null, true);
-			else callback(new Error('Not allowed by CORS'));
+			else callback(new Error('Not allowed by CORS.'));
 		},
 		optionsSuccessStatus: 200
 	});
@@ -29,8 +30,10 @@ const corsOptionsDelegate = (req, callback) => {
 const dbURI = 'mongodb://bookkeeper:qwerty_123@ds221339.mlab.com:21339/bookstore';
 // const dbURI = 'mongodb://0.0.0.0:27017/bookstore';
 
+router.use(helmet());
 router.options('*', cors());
 router.use(cors());
+router.use(bodyParser.json());
 
 mongoose.connect(dbURI)
 	.then(() => {console.log(`You have been successfully connected to the database.`)})
@@ -50,9 +53,6 @@ router.use(compress({
 	},
 	level: -1
 }));
-
-router.use(bodyParser.json());
-router.use(helmet());
 
 router.use(new Limiter({
 	windowMs: 5 * 60 * 1000, // 5 minutes

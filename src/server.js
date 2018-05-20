@@ -7,9 +7,10 @@ const path = require('path');
 const express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
 const app = express();
-const [HOST, PORT] = ['0.0.0.0', process.env.PORT || 3000];
+const HOST = '0.0.0.0', PORT = process.env.PORT || 3000;
 const accessLogStream = fs.createWriteStream(
 	path.join(__dirname, '../localData/logStream.log'),
 	{flags: 'a'}
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-	// console.error(err);
+	console.error(err);
 	return res.status((err.status >= 100 && err.status < 600)? err.status : 500).json({
 		error: {
 			status: err.status,
