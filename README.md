@@ -1,4 +1,4 @@
-Totango Bookstore Exercise
+Bookstore Exercise
 -----
 
 Introduction
